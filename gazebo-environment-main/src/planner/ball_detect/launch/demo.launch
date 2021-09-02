@@ -1,0 +1,33 @@
+<launch>
+    <arg name = "color_img_topic"   default = "/camera/color/image_raw" />
+    <arg name = "depth_align_img_topic" default = "/camera/aligned_depth_to_color/image_raw" />
+    
+    <node name = "red_obj_detector" pkg = "detector" type = "color_detector" respawn = "true" output = "screen" >
+        <rosparam command="load" file="$(find detector)/config/camera.yaml"  />
+        <rosparam command="load" file="$(find detector)/config/default.yaml" />
+
+        <remap from = "~depth_align_img_topic" to = "$(arg depth_align_img_topic)" />
+        <remap from = "~color_img_topic" to = "$(arg color_img_topic)" />
+
+        <param name="detector/is_simulator" value="false" type="bool"/>
+    </node>
+<!-- 
+    <node pkg="plan_env" name="obj_generator" type="obj_generator" output="screen">
+        <param name="obj_generator/obj_num" value="1"/>    
+        <param name="obj_generator/x_size" value="10.0"/>  
+        <param name="obj_generator/y_size" value="10.0"/>  
+        <param name="obj_generator/h_size" value="-1.0"/>   
+        <param name="obj_generator/vel" value="1.0"/>
+        <param name="obj_generator/yaw_dot" value="2.0"/>   
+        <param name="obj_generator/acc_r1" value="0.0"/>   
+        <param name="obj_generator/acc_r2" value="0.0"/>   
+        <param name="obj_generator/acc_z" value="0.0"/>   
+        <param name="obj_generator/scale1" value="0.2"/>   
+        <param name="obj_generator/scale2" value="0.4"/>   
+        <param name="obj_generator/interval" value="100.0"/>    
+        <param name="obj_generator/input_type" value="1"/>
+    </node> -->
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find detector)/launch/simulation.rviz" required="true" />
+
+</launch>
